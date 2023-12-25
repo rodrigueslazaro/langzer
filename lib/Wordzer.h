@@ -6,25 +6,22 @@
 using namespace std;
 
 struct pieces {
-    string singlecon;
-    string doublecon;
-    string triplecon;
-    string singlevow;
-    string doublevow;
-    string triplevow;
-    string begginings;
-    string endings;
+    vector<string> cons;
+    vector<string> vows;
+    string beg;
+    string end;
 };
 
 class Wordzer {
 public:
     Wordzer(){};
     void makeLang(string file);
-    void genWords(int num = 10, int size=5);
+    void genWords(int num, string newlangname);
 private:
     rapidjson::Document wordsdb;
     string langname;
-    vector<struct pieces> wordspieces;
-    bool isvowel(string letter);
-    bool isconso(string letter);
+    struct pieces wordpc;
+    bool istype(string opt, string letter);
+    void findletseq(string opt, string word);
+    string checklet(string opt, string c, string word);
 };
