@@ -62,21 +62,21 @@ void Wordzer::makeLang(string lang) {
         }
     }
 
-    // cout << "consonants" << endl;
-    // for (auto c : wordpc.cons) {
-    //     cout << c << " ";
-    // }
-    // cout << endl;
-    // cout << "vowels" << endl;
-    // for (auto c : wordpc.vows) {
-    //     cout << c << " ";
-    // }
-    // cout << endl;
-    // cout << "endings" << endl;
-    // for (auto c : wordpc.end) {
-    //     cout << c << " ";
-    // }
-    // cout << endl;
+    cout << "consonants" << endl;
+    for (auto c : wordpc.cons) {
+        cout << c << " ";
+    }
+    cout << endl;
+    cout << "vowels" << endl;
+    for (auto c : wordpc.vows) {
+        cout << c << " ";
+    }
+    cout << endl;
+    cout << "endings" << endl;
+    for (auto c : wordpc.end) {
+        cout << c << " ";
+    }
+    cout << endl;
 }
 
 string Wordzer::checklet(string opt, string c, string word) {
@@ -86,13 +86,23 @@ string Wordzer::checklet(string opt, string c, string word) {
     if (c.size() == 1) {
         size_t pos = word.find(c);
         if (pos != string::npos) {
-            seq = c;
+            if (pos-1 >= 0) {
+                follow = word[pos-1];
+                if (istype("vowels", follow))
+                    seq = word[pos-1];
+            }
+            seq += c;
             for (long unsigned int i=pos+1; i<word.size() and search; i++) {
                 follow = word[i];
                 if (istype(opt, follow)) {
                     seq += follow;
                 } else {
                     search = false;
+                    if (pos+1 < word.size()) {
+                        follow = word[pos+1];
+                        if (istype("vowels", follow))
+                            seq += word[pos+1];
+                    }
                 }
             }
             return seq;
@@ -142,11 +152,11 @@ bool Wordzer::istype(string opt, string letter) {
 }
 
 void Wordzer::genWords(int num, string newlangname) {
-    ofstream csvLangFile(langname+".csv");
-    if (!csvLangFile.is_open()) {
-        cerr << "Error opening file for writing." << endl;
-    }
-    csvLangFile << "language,1-len,2-len,3-len,4-len,5-len,6-len" << endl << langname << ",";
+    // ofstream csvLangFile(langname+".csv");
+    // if (!csvLangFile.is_open()) {
+    //     cerr << "Error opening file for writing." << endl;
+    // }
+    // csvLangFile << "language,1-len,2-len,3-len,4-len,5-len,6-len" << endl << langname << ",";
     random_device rd;
     mt19937 gen(rd());
     string newword = "";
@@ -172,9 +182,10 @@ void Wordzer::genWords(int num, string newlangname) {
                 swap ^= 1;
             }
             newword += wordpc.end[randend(gen)];
-            csvLangFile << newword + " ";
+            cout << newword << endl;
+            // csvLangFile << newword + " ";
             newword = "";
         }
-        csvLangFile << ",";
+        // csvLangFile << ",";
     }
 }
